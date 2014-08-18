@@ -23,4 +23,10 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		fac.getDisplay().info("Total: US$ " + total/100 + "." + total%100);
 	}
 
+	public void cancel() {
+		if (this.total == 0) {
+			throw new CoffeeMachineException(" Cancel without inserting coins");
+		}
+	}
+
 }
