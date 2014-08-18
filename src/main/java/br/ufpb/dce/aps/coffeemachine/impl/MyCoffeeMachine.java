@@ -6,7 +6,8 @@ import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
 
 public class MyCoffeeMachine implements CoffeeMachine {
 	
-	ComponentsFactory fac;
+	private ComponentsFactory fac;
+	private int total;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		fac = factory;
@@ -14,7 +15,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	}
 
 	public void insertCoin(Coin dime) {
-		fac.getDisplay().info("Total: US$ 0.10");
+		total += dime.getValue();
+		fac.getDisplay().info("Total: US$ " + total/100 + "." + total%100);
 	}
 
 }
