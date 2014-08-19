@@ -118,6 +118,13 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			this.drinkRelease();
 			this.coins.clear();
 			break;
+		case WHITE:
+			this.blackPlan();
+			fac.getCreamerDispenser().contains(2.1);
+			this.blackMix();
+			fac.getCreamerDispenser().release(2.2);
+			this.drinkRelease();
+			break;
 		default:
 			break;
 		}
