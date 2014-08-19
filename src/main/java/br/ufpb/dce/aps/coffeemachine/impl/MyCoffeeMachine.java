@@ -110,6 +110,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	}
 	
 	public void select(Drink drink) {
+		if(total < this.cafe){
+			fac.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
+			retornarMoedas();
+			fac.getDisplay().info(Messages.INSERT_COINS);
+			return;
+		}
 		switch (drink) {
 		case BLACK:
 			fac.getCupDispenser().contains(1);
