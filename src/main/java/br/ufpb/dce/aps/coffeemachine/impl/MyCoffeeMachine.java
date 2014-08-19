@@ -59,6 +59,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		fac.getDisplay().info(Messages.TAKE_DRINK);
 		fac.getDisplay().info(Messages.INSERT_COINS);
 	}
+	
 	//Métodos do teste
 	
 	public void insertCoin(Coin moeda) {
@@ -98,7 +99,14 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			this.drinkRelease();
 			break;
 		case BLACK_SUGAR:
-			this.blackPlan();
+			if(!(fac.getCupDispenser().contains(1))){
+				fac.getDisplay().warn(Messages.OUT_OF_CUP);
+				retornarMoedas();
+				fac.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
+			fac.getWaterDispenser().contains(1.1);
+			fac.getCoffeePowderDispenser().contains(1.2);
 			if(!(fac.getSugarDispenser().contains(2.1))){
 				fac.getDisplay().warn(Messages.OUT_OF_SUGAR);
 				retornarMoedas();
