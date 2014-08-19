@@ -12,13 +12,15 @@ import br.ufpb.dce.aps.coffeemachine.Messages;
 public class MyCoffeeMachine implements CoffeeMachine {
 	
 	private ComponentsFactory fac;
-	private int total;
-	private ArrayList<Coin> coins;
+	private int total, cafe;
+	private ArrayList<Coin> coins, listaTroco;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		fac = factory;
 		fac.getDisplay().info("Insert coins and select a drink!");
 		coins = new ArrayList<Coin>();
+		listaTroco = new ArrayList<Coin>();
+		cafe = 35;
 	}
 	
 	//Meus métodos
@@ -58,6 +60,34 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		fac.getDrinkDispenser().release(1.5);
 		fac.getDisplay().info(Messages.TAKE_DRINK);
 		fac.getDisplay().info(Messages.INSERT_COINS);
+	}
+	
+	public int calculaTroco(){
+		int contador = 0;
+		for(Coin c : this.coins){
+			contador += c.getValue();
+		}
+		return (contador - this.cafe);
+	}
+	
+	public boolean planejamento(int troco) {
+		for (Coin coin : Coin.reverse()) {
+			if (coin.getValue() <= troco && this.fac.getCashBox().count(coin) > 0) {
+				troco -= coin.getValue();
+			}
+		}
+		return troco == 0;
+	}
+	
+	public ArrayList<Coin> retornarTroco(int troco) {
+		for (Coin coin : Coin.reverse()) {
+			while (coin.getValue() <= troco) {
+				fac.getCashBox().release(coin);
+				this.listaTroco.add(coin);
+				troco -= coin.getValue();
+			}
+		}
+		return listaTroco;
 	}
 	
 	//Métodos do teste
@@ -124,6 +154,21 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			this.blackMix();
 			fac.getCreamerDispenser().release(2.2);
 			this.drinkRelease();
+			break;
+		case WHITE_SUGAR:
+			this.blackPlan();
+			fac.getCreamerDispenser().contains(2.1);
+			fac.getSugarDispenser().contains(3.1);
+			this.planejamento(this.calculaTroco());
+			this.blackMix();
+			fac.getCreamerDispenser().release(2.2);
+			fac.getSugarDispenser().release(3.2);
+			fac.getDisplay().info(Messages.RELEASING);
+			fac.getCupDispenser().release(1);
+			fac.getDrinkDispenser().release(1.5);
+			fac.getDisplay().info(Messages.TAKE_DRINK);
+			this.retornarTroco(this.calculaTroco());
+			fac.getDisplay().info(Messages.INSERT_COINS);
 			break;
 		default:
 			break;
