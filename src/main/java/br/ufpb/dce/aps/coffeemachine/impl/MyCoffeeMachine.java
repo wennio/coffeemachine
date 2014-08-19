@@ -39,7 +39,28 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		this.retornarMoedas();
 		fac.getDisplay().info("Insert coins and select a drink!");
 	}
-		
+	
+	public void blackPlan(){
+		fac.getCupDispenser().contains(1);
+		fac.getWaterDispenser().contains(1.1);
+		fac.getCoffeePowderDispenser().contains(1.2);
+	}
+	
+	public void blackMix(){
+		fac.getDisplay().info(Messages.MIXING);
+		fac.getCoffeePowderDispenser().release(1.3);
+		fac.getWaterDispenser().release(1.4);
+	}
+	
+	public void drinkRelease(){
+		fac.getDisplay().info(Messages.RELEASING);
+		fac.getCupDispenser().release(1);
+		fac.getDrinkDispenser().release(1.5);
+		fac.getDisplay().info(Messages.TAKE_DRINK);
+		fac.getDisplay().info(Messages.INSERT_COINS);
+	}
+	//Métodos do teste
+	
 	public void insertCoin(Coin moeda) {
 		if(moeda == null){
 			throw new CoffeeMachineException("Insert null coin");
@@ -60,40 +81,17 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	public void select(Drink drink) {
 		switch (drink) {
 		case BLACK:
-			fac.getCupDispenser().contains(1);
-			fac.getWaterDispenser().contains(1.1);
-			fac.getCoffeePowderDispenser().contains(1.2);
-
-			fac.getDisplay().info(Messages.MIXING);
-			fac.getCoffeePowderDispenser().release(1.3);
-			fac.getWaterDispenser().release(1.4);
-			
-			fac.getDisplay().info(Messages.RELEASING);
-			fac.getCupDispenser().release(1);
-			fac.getDrinkDispenser().release(1.5);
-			fac.getDisplay().info(Messages.TAKE_DRINK);
-			
-			fac.getDisplay().info(Messages.INSERT_COINS);
+			this.blackPlan();
+			this.blackMix();
+			this.drinkRelease();
 			break;
 		case BLACK_SUGAR:
-			fac.getCupDispenser().contains(1);
-			fac.getWaterDispenser().contains(1.1);
-			fac.getCoffeePowderDispenser().contains(1.2);
-			
+			this.blackPlan();
 			fac.getSugarDispenser().contains(2.1);
-			
-			fac.getDisplay().info(Messages.MIXING);
-			fac.getCoffeePowderDispenser().release(1.3);
-			fac.getWaterDispenser().release(1.4);
-			
+			this.blackMix();
 			fac.getSugarDispenser().release(2.2);
-			
-			fac.getDisplay().info(Messages.RELEASING);
-			fac.getCupDispenser().release(1);
-			fac.getDrinkDispenser().release(1.5);
-			fac.getDisplay().info(Messages.TAKE_DRINK);
-			
-			fac.getDisplay().info(Messages.INSERT_COINS);
+			this.drinkRelease();
+			this.coins.clear();
 			break;
 		default:
 			break;
