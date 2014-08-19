@@ -6,6 +6,7 @@ import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
+import br.ufpb.dce.aps.coffeemachine.Drink;
 import br.ufpb.dce.aps.coffeemachine.Messages;
 
 public class MyCoffeeMachine implements CoffeeMachine {
@@ -18,7 +19,26 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		fac = factory;
 		fac.getDisplay().info("Insert coins and select a drink!");
 	}
-
+	
+	//Meus métodos
+	
+	private void retornarMoedas(){
+		Coin[] reverso = Coin.reverse();
+		for (Coin r : reverso) {
+			for (Coin aux : this.coins) {
+				if (aux == r) {
+					this.fac.getCashBox().release(aux);
+				}
+			}
+		}
+	}
+		
+	private void tarefaCompletaDevolverMoedas(){
+		fac.getDisplay().warn("Cancelling drink. Please, get your coins.");
+		this.retornarMoedas();
+		fac.getDisplay().info("Insert coins and select a drink!");
+	}
+		
 	public void insertCoin(Coin moeda) {
 		if(moeda == null){
 			throw new CoffeeMachineException("Insert null coin");
@@ -37,22 +57,29 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		this.tarefaCompletaDevolverMoedas();
 	}
 	
-	//Meus métodos
-	
-	private void retornarMoedas(){
-		Coin[] reverso = Coin.reverse();
-		for (Coin r : reverso) {
-			for (Coin aux : this.coins) {
-				if (aux == r) {
-					this.fac.getCashBox().release(aux);
-				}
-			}
+	public void select(Drink drink) {
+		switch (drink) {
+		case BLACK:
+			fac.getCupDispenser().contains(1);
+			fac.getWaterDispenser().contains(1.1);
+			fac.getCoffeePowderDispenser().contains(1.2);
+
+			fac.getDisplay().info(Messages.MIXING);
+			fac.getCoffeePowderDispenser().release(1.3);
+			fac.getWaterDispenser().release(1.4);
+			
+			fac.getDisplay().info(Messages.RELEASING);
+			fac.getCupDispenser().release(1);
+			fac.getDrinkDispenser().release(1.5);
+			fac.getDisplay().info(Messages.TAKE_DRINK);
+			
+			fac.getDisplay().info(Messages.INSERT_COINS);
+			break;
+		default:
+			break;
 		}
 	}
 	
-	private void tarefaCompletaDevolverMoedas(){
-		fac.getDisplay().warn(Messages.CANCEL_MESSAGE);
-		this.retornarMoedas();
-		fac.getDisplay().info(Messages.INSERT_COINS_MESSAGE);
-	}
+
+	
 }
