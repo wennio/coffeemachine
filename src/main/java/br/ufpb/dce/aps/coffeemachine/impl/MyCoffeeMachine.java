@@ -13,11 +13,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	
 	private ComponentsFactory fac;
 	private int total;
-	private ArrayList<Coin> coins = new ArrayList<Coin>();
+	private ArrayList<Coin> coins;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		fac = factory;
 		fac.getDisplay().info("Insert coins and select a drink!");
+		coins = new ArrayList<Coin>();
 	}
 	
 	//Meus métodos
@@ -51,10 +52,9 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	public void cancel() {
 		if (this.total == 0) {
 			throw new CoffeeMachineException(" Cancel without inserting coins");
-		}else if(coins.size() >= 2){
+		}else if(coins.size() >= 1){
 			this.tarefaCompletaDevolverMoedas();
 		}
-		this.tarefaCompletaDevolverMoedas();
 	}
 	
 	public void select(Drink drink) {
@@ -67,6 +67,26 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			fac.getDisplay().info(Messages.MIXING);
 			fac.getCoffeePowderDispenser().release(1.3);
 			fac.getWaterDispenser().release(1.4);
+			
+			fac.getDisplay().info(Messages.RELEASING);
+			fac.getCupDispenser().release(1);
+			fac.getDrinkDispenser().release(1.5);
+			fac.getDisplay().info(Messages.TAKE_DRINK);
+			
+			fac.getDisplay().info(Messages.INSERT_COINS);
+			break;
+		case BLACK_SUGAR:
+			fac.getCupDispenser().contains(1);
+			fac.getWaterDispenser().contains(1.1);
+			fac.getCoffeePowderDispenser().contains(1.2);
+			
+			fac.getSugarDispenser().contains(2.1);
+			
+			fac.getDisplay().info(Messages.MIXING);
+			fac.getCoffeePowderDispenser().release(1.3);
+			fac.getWaterDispenser().release(1.4);
+			
+			fac.getSugarDispenser().release(2.2);
 			
 			fac.getDisplay().info(Messages.RELEASING);
 			fac.getCupDispenser().release(1);
