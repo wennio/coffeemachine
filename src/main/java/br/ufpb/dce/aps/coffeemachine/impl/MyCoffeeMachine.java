@@ -94,7 +94,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			break;
 		case BLACK_SUGAR:
 			this.blackPlan();
-			fac.getSugarDispenser().contains(2.1);
+			if(!(fac.getSugarDispenser().contains(2.1))){
+				fac.getDisplay().warn(Messages.OUT_OF_SUGAR);
+				retornarMoedas();
+				fac.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
 			this.blackMix();
 			fac.getSugarDispenser().release(2.2);
 			this.drinkRelease();
