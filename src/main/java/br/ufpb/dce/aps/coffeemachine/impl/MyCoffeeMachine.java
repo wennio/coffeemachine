@@ -34,6 +34,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 				}
 			}
 		}
+		coins.clear();
 	}
 		
 	private void tarefaCompletaDevolverMoedas(){
@@ -157,6 +158,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		case WHITE:
 			this.blackPlan();
 			fac.getCreamerDispenser().contains(2.1);
+			if (!planejamento(calculaTroco())){
+				fac.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
+				this.retornarMoedas();
+				this.fac.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
 			this.blackMix();
 			fac.getCreamerDispenser().release(2.2);
 			this.drinkRelease();
