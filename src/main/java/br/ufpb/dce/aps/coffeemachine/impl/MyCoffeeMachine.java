@@ -81,8 +81,15 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	public void select(Drink drink) {
 		switch (drink) {
 		case BLACK:
-			this.blackPlan();
-			this.blackMix();
+			fac.getCupDispenser().contains(1);
+			fac.getWaterDispenser().contains(3.0);
+			if(!(fac.getCoffeePowderDispenser().contains(3.0))){
+				fac.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
+				retornarMoedas();
+				fac.getDisplay().info("Insert coins and select a drink!");
+				return;
+			}
+			this.blackMix();	
 			this.drinkRelease();
 			break;
 		case BLACK_SUGAR:
