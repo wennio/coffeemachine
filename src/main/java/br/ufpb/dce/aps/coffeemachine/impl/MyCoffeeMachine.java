@@ -98,7 +98,12 @@ public class MyCoffeeMachine implements CoffeeMachine{
 			fac.getWaterDispenser().contains(1.1);	//inOrder.verify(waterDispenser).contains(anyDouble());
 			fac.getCoffeePowderDispenser().contains(1.2);	//inOrder.verify(coffeePowderDispenser).contains(anyDouble());
 			
-			fac.getSugarDispenser().contains(2.1);
+			if(!(fac.getSugarDispenser().contains(2.1))){
+				fac.getDisplay().warn(Messages.OUT_OF_SUGAR);
+				devolverMoedas();
+				fac.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
 			
 			//verifyBlackMix
 			fac.getDisplay().info(Messages.MIXING);	//inOrder.verify(display).info(Messages.MIXING);
