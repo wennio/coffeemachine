@@ -6,6 +6,7 @@ import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
+import br.ufpb.dce.aps.coffeemachine.Drink;
 import br.ufpb.dce.aps.coffeemachine.Messages;
 
 public class MyCoffeeMachine implements CoffeeMachine{
@@ -35,9 +36,9 @@ public class MyCoffeeMachine implements CoffeeMachine{
 	}
 	
 	public void tarefaDevolverMoeda(){
-		fac.getDisplay().warn(Messages.CANCEL_MESSAGE);
+		fac.getDisplay().warn(Messages.CANCEL);
 		devolverMoedas();
-		fac.getDisplay().info(Messages.INSERT_COINS_MESSAGE);
+		fac.getDisplay().info(Messages.INSERT_COINS);
 	}
 	
 	//Metodos do teste
@@ -60,6 +61,35 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		}else if(listaMoedasInseridas.size() > 0){
 			tarefaDevolverMoeda();
 		}
+	}
+
+	public void select(Drink drink) {
+		// TODO Auto-generated method stub
+		switch (drink) {
+		case BLACK:
+			//verifyBlackPlan
+			fac.getCupDispenser().contains(1);	//inOrder.verify(cupDispenser).contains(1);
+			fac.getWaterDispenser().contains(1.1);	//inOrder.verify(waterDispenser).contains(anyDouble());
+			fac.getCoffeePowderDispenser().contains(1.2);	//inOrder.verify(coffeePowderDispenser).contains(anyDouble());
+			
+			//verifyBlackMix
+			fac.getDisplay().info(Messages.MIXING);	//inOrder.verify(display).info(Messages.MIXING);
+			fac.getCoffeePowderDispenser().release(1.3);	//inOrder.verify(coffeePowderDispenser).release(anyDouble());
+			fac.getWaterDispenser().release(1.4); 	//inOrder.verify(waterDispenser).release(anyDouble());
+			
+			//verifyDrinkRelease
+			fac.getDisplay().info(Messages.RELEASING); 	//inOrder.verify(display).info(Messages.RELEASING);
+			fac.getCupDispenser().release(1); 	//inOrder.verify(cupDispenser).release(1);
+			fac.getDrinkDispenser().release(1.6); 	//inOrder.verify(drinkDispenser).release(anyDouble());
+			fac.getDisplay().info(Messages.TAKE_DRINK); 	//inOrder.verify(display).info(Messages.TAKE_DRINK);
+			fac.getDisplay().info(Messages.INSERT_COINS); 	//verify(display).info(Messages.INSERT_COINS);
+
+			break;
+
+		default:
+			break;
+		}
+		
 	}
 
 }
