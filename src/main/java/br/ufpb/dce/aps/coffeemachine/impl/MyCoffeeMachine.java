@@ -1,5 +1,7 @@
 package br.ufpb.dce.aps.coffeemachine.impl;
 
+import java.util.ArrayList;
+
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
@@ -10,6 +12,7 @@ public class MyCoffeeMachine implements CoffeeMachine{
 	
 	private ComponentsFactory fac;
 	private int total;
+	private ArrayList<Coin> listaMoedasInseridas = new ArrayList<Coin>();
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		// TODO Auto-generated constructor stub
@@ -18,14 +21,35 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		fac.getDisplay().info("Insert coins and select a drink!");
 		
 	}
+	
+	//Meus metodos
+	
+	public void devolverMoedas(){
+		for (Coin coin : Coin.reverse()) {
+			for (Coin moeda : listaMoedasInseridas) {
+				if(moeda == coin){
+					fac.getCashBox().release(moeda);
+				}
+			}
+		}
+	}
+	
+	public void tarefaDevolverMoeda(){
+		fac.getDisplay().warn(Messages.CANCEL_MESSAGE);
+		devolverMoedas();
+		fac.getDisplay().info(Messages.INSERT_COINS_MESSAGE);
+	}
+	
+	//Metodos do teste
 
-	public void insertCoin(Coin dime) {
+	public void insertCoin(Coin moeda) {
 		// TODO Auto-generated method stub
-		if (dime == null){
+		if (moeda == null){
 			throw new CoffeeMachineException("Insert null coin");
 		}
-		total += dime.getValue();
+		total += moeda.getValue();
 		fac.getDisplay().info("Total: US$ " + total/100 + "." + total%100);
+		listaMoedasInseridas.add(moeda);
 		
 	}
 
@@ -33,10 +57,9 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		// TODO Auto-generated method stub
 		if(this.total == 0){
 			throw new CoffeeMachineException("Cancel without inserting coins");
+		}else if(listaMoedasInseridas.size() > 0){
+			tarefaDevolverMoeda();
 		}
-		fac.getDisplay().warn(Messages.CANCEL_MESSAGE);
-		fac.getCashBox().release(Coin.halfDollar);
-		fac.getDisplay().info(Messages.INSERT_COINS_MESSAGE);
 	}
 
 }
