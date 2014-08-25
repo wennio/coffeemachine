@@ -109,6 +109,7 @@ public class MyCoffeeMachine implements CoffeeMachine{
 			fac.getDisplay().info(Messages.TAKE_DRINK); 	//inOrder.verify(display).info(Messages.TAKE_DRINK);
 			
 			fac.getDisplay().info(Messages.INSERT_COINS); 	//verify(display).info(Messages.INSERT_COINS);
+			listaMoedasInseridas.clear();
 		default:
 			break;
 		}
