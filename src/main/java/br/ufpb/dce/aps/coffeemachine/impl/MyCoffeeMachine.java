@@ -12,13 +12,15 @@ public class MyCoffeeMachine implements CoffeeMachine{
 	
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
+		dolar = 0;
+		cents = 0;
 		this.factory = factory; 
 		factory.getDisplay().info("Insert coins and select a drink!");
 	}
 
 	public void insertCoin(Coin dime) {
-		dolar = dime.getValue() / 100;
-		cents = dime.getValue() % 100;
+		dolar += dime.getValue() / 100;
+		cents += dime.getValue() % 100;
 		factory.getDisplay().info("Total: US$ " + dolar + "." + cents + "");
 	}
 
