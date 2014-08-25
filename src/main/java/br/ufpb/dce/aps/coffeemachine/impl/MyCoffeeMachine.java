@@ -13,12 +13,13 @@ public class MyCoffeeMachine implements CoffeeMachine{
 	
 	private ComponentsFactory fac;
 	private int total;
-	private ArrayList<Coin> listaMoedasInseridas = new ArrayList<Coin>();
+	private ArrayList<Coin> listaMoedasInseridas;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		// TODO Auto-generated constructor stub
 		fac = factory;
 		total = 0;
+		listaMoedasInseridas = new ArrayList<Coin>();
 		fac.getDisplay().info("Insert coins and select a drink!");
 		
 	}
@@ -82,10 +83,32 @@ public class MyCoffeeMachine implements CoffeeMachine{
 			fac.getCupDispenser().release(1); 	//inOrder.verify(cupDispenser).release(1);
 			fac.getDrinkDispenser().release(1.6); 	//inOrder.verify(drinkDispenser).release(anyDouble());
 			fac.getDisplay().info(Messages.TAKE_DRINK); 	//inOrder.verify(display).info(Messages.TAKE_DRINK);
+			
 			fac.getDisplay().info(Messages.INSERT_COINS); 	//verify(display).info(Messages.INSERT_COINS);
 
 			break;
-
+		case BLACK_SUGAR:
+			//verifyBlackPlan
+			fac.getCupDispenser().contains(1);	//inOrder.verify(cupDispenser).contains(1);
+			fac.getWaterDispenser().contains(1.1);	//inOrder.verify(waterDispenser).contains(anyDouble());
+			fac.getCoffeePowderDispenser().contains(1.2);	//inOrder.verify(coffeePowderDispenser).contains(anyDouble());
+			
+			fac.getSugarDispenser().contains(2.1);
+			
+			//verifyBlackMix
+			fac.getDisplay().info(Messages.MIXING);	//inOrder.verify(display).info(Messages.MIXING);
+			fac.getCoffeePowderDispenser().release(1.3);	//inOrder.verify(coffeePowderDispenser).release(anyDouble());
+			fac.getWaterDispenser().release(1.4); 	//inOrder.verify(waterDispenser).release(anyDouble());
+			
+			fac.getSugarDispenser().release(2.2);
+			
+			//verifyDrinkRelease
+			fac.getDisplay().info(Messages.RELEASING); 	//inOrder.verify(display).info(Messages.RELEASING);
+			fac.getCupDispenser().release(1); 	//inOrder.verify(cupDispenser).release(1);
+			fac.getDrinkDispenser().release(1.6); 	//inOrder.verify(drinkDispenser).release(anyDouble());
+			fac.getDisplay().info(Messages.TAKE_DRINK); 	//inOrder.verify(display).info(Messages.TAKE_DRINK);
+			
+			fac.getDisplay().info(Messages.INSERT_COINS); 	//verify(display).info(Messages.INSERT_COINS);
 		default:
 			break;
 		}
