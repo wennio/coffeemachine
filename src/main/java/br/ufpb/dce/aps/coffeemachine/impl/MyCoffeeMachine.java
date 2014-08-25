@@ -69,7 +69,7 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		switch (drink) {
 		case BLACK:
 			//verifyBlackPlan
-			fac.getCupDispenser().contains(1);	
+			fac.getCupDispenser().contains(1);
 			if(!(fac.getWaterDispenser().contains(1.1))){
 				fac.getDisplay().warn(Messages.OUT_OF_WATER);
 				devolverMoedas();
@@ -84,24 +84,29 @@ public class MyCoffeeMachine implements CoffeeMachine{
 			}
 			
 			//verifyBlackMix
-			fac.getDisplay().info(Messages.MIXING);	//inOrder.verify(display).info(Messages.MIXING);
-			fac.getCoffeePowderDispenser().release(1.3);	//inOrder.verify(coffeePowderDispenser).release(anyDouble());
-			fac.getWaterDispenser().release(1.4); 	//inOrder.verify(waterDispenser).release(anyDouble());
+			fac.getDisplay().info(Messages.MIXING);	
+			fac.getCoffeePowderDispenser().release(1.3);
+			fac.getWaterDispenser().release(1.4); 	
 			
 			//verifyDrinkRelease
-			fac.getDisplay().info(Messages.RELEASING); 	//inOrder.verify(display).info(Messages.RELEASING);
-			fac.getCupDispenser().release(1); 	//inOrder.verify(cupDispenser).release(1);
-			fac.getDrinkDispenser().release(1.6); 	//inOrder.verify(drinkDispenser).release(anyDouble());
-			fac.getDisplay().info(Messages.TAKE_DRINK); 	//inOrder.verify(display).info(Messages.TAKE_DRINK);
+			fac.getDisplay().info(Messages.RELEASING);
+			fac.getCupDispenser().release(1); 
+			fac.getDrinkDispenser().release(1.6);
+			fac.getDisplay().info(Messages.TAKE_DRINK); 
 			
-			fac.getDisplay().info(Messages.INSERT_COINS); 	//verify(display).info(Messages.INSERT_COINS);
+			fac.getDisplay().info(Messages.INSERT_COINS); 
 
 			break;
 		case BLACK_SUGAR:
 			//verifyBlackPlan
-			fac.getCupDispenser().contains(1);	//inOrder.verify(cupDispenser).contains(1);
-			fac.getWaterDispenser().contains(1.1);	//inOrder.verify(waterDispenser).contains(anyDouble());
-			fac.getCoffeePowderDispenser().contains(1.2);	//inOrder.verify(coffeePowderDispenser).contains(anyDouble());
+			if(!(fac.getCupDispenser().contains(1))){
+				fac.getDisplay().warn(Messages.OUT_OF_CUP);
+				devolverMoedas();
+				fac.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
+			fac.getWaterDispenser().contains(1.1);
+			fac.getCoffeePowderDispenser().contains(1.2);	
 			
 			if(!(fac.getSugarDispenser().contains(2.1))){
 				fac.getDisplay().warn(Messages.OUT_OF_SUGAR);
@@ -111,19 +116,19 @@ public class MyCoffeeMachine implements CoffeeMachine{
 			}
 			
 			//verifyBlackMix
-			fac.getDisplay().info(Messages.MIXING);	//inOrder.verify(display).info(Messages.MIXING);
-			fac.getCoffeePowderDispenser().release(1.3);	//inOrder.verify(coffeePowderDispenser).release(anyDouble());
-			fac.getWaterDispenser().release(1.4); 	//inOrder.verify(waterDispenser).release(anyDouble());
+			fac.getDisplay().info(Messages.MIXING);	
+			fac.getCoffeePowderDispenser().release(1.3);
+			fac.getWaterDispenser().release(1.4); 
 			
 			fac.getSugarDispenser().release(2.2);
 			
 			//verifyDrinkRelease
-			fac.getDisplay().info(Messages.RELEASING); 	//inOrder.verify(display).info(Messages.RELEASING);
-			fac.getCupDispenser().release(1); 	//inOrder.verify(cupDispenser).release(1);
-			fac.getDrinkDispenser().release(1.6); 	//inOrder.verify(drinkDispenser).release(anyDouble());
-			fac.getDisplay().info(Messages.TAKE_DRINK); 	//inOrder.verify(display).info(Messages.TAKE_DRINK);
+			fac.getDisplay().info(Messages.RELEASING);
+			fac.getCupDispenser().release(1); 
+			fac.getDrinkDispenser().release(1.6);
+			fac.getDisplay().info(Messages.TAKE_DRINK);
 			
-			fac.getDisplay().info(Messages.INSERT_COINS); 	//verify(display).info(Messages.INSERT_COINS);
+			fac.getDisplay().info(Messages.INSERT_COINS);
 			listaMoedasInseridas.clear();
 		default:
 			break;
