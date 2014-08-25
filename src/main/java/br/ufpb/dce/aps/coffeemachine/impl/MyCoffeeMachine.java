@@ -6,18 +6,21 @@ import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
 
 public class MyCoffeeMachine implements CoffeeMachine{
 	
-	ComponentsFactory fac;
+	private ComponentsFactory fac;
+	private int total;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		// TODO Auto-generated constructor stub
 		fac = factory;
+		total = 0;
 		fac.getDisplay().info("Insert coins and select a drink!");
 		
 	}
 
 	public void insertCoin(Coin dime) {
 		// TODO Auto-generated method stub
-		fac.getDisplay().info("Total: US$ 0.10");
+		total += dime.getValue();
+		fac.getDisplay().info("Total: US$ " + total/100 + "." + total%100);
 		
 	}
 
