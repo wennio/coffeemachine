@@ -69,9 +69,14 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		switch (drink) {
 		case BLACK:
 			//verifyBlackPlan
-			fac.getCupDispenser().contains(1);	//inOrder.verify(cupDispenser).contains(1);
-			fac.getWaterDispenser().contains(1.1);	//inOrder.verify(waterDispenser).contains(anyDouble());
-			fac.getCoffeePowderDispenser().contains(1.2);	//inOrder.verify(coffeePowderDispenser).contains(anyDouble());
+			fac.getCupDispenser().contains(1);	
+			fac.getWaterDispenser().contains(1.1);
+			if(!(fac.getCoffeePowderDispenser().contains(1.2))){
+				fac.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
+				devolverMoedas();
+				fac.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
 			
 			//verifyBlackMix
 			fac.getDisplay().info(Messages.MIXING);	//inOrder.verify(display).info(Messages.MIXING);
