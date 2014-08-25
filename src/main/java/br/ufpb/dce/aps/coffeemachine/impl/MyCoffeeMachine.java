@@ -1,6 +1,7 @@
 package br.ufpb.dce.aps.coffeemachine.impl;
 
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
+import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
 
@@ -19,9 +20,13 @@ public class MyCoffeeMachine implements CoffeeMachine{
 	}
 
 	public void insertCoin(Coin dime) {
-		dolar += dime.getValue() / 100;
-		cents += dime.getValue() % 100;
-		factory.getDisplay().info("Total: US$ " + dolar + "." + cents + "");
+		if (dime != null){
+			dolar += dime.getValue() / 100;
+			cents += dime.getValue() % 100;
+			factory.getDisplay().info("Total: US$ " + dolar + "." + cents + "");
+		}else {
+			throw new CoffeeMachineException("Insert null coin");
+		}
 	}
 
 }
