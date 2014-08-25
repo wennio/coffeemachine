@@ -70,7 +70,12 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		case BLACK:
 			//verifyBlackPlan
 			fac.getCupDispenser().contains(1);	
-			fac.getWaterDispenser().contains(1.1);
+			if(!(fac.getWaterDispenser().contains(1.1))){
+				fac.getDisplay().warn(Messages.OUT_OF_WATER);
+				devolverMoedas();
+				fac.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
 			if(!(fac.getCoffeePowderDispenser().contains(1.2))){
 				fac.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
 				devolverMoedas();
