@@ -29,4 +29,10 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		}
 	}
 
+	public void cancel() {
+		if((dolar == 0) || (cents == 0 )){
+			throw new CoffeeMachineException("Cancel without inserting coins");
+		}
+	}
+
 }
