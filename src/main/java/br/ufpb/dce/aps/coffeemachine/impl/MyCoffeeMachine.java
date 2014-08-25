@@ -28,4 +28,11 @@ public class MyCoffeeMachine implements CoffeeMachine{
 		
 	}
 
+	public void cancel() {
+		// TODO Auto-generated method stub
+		if(this.total == 0){
+			throw new CoffeeMachineException("Cancel without inserting coins");
+		}
+	}
+
 }
