@@ -83,6 +83,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		factory.getDrinkDispenser().release (1.5);
 		display.info("Please, take your drink.");		
 		display.info("Insert coins and select a drink!");
+		
+		moedas.clear();
 	}
 	
 }
