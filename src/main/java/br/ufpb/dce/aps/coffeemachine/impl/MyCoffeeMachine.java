@@ -9,9 +9,11 @@ import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
 import br.ufpb.dce.aps.coffeemachine.Display;
 import br.ufpb.dce.aps.coffeemachine.Drink;
+import br.ufpb.dce.aps.coffeemachine.Messages;
 
 public class MyCoffeeMachine implements CoffeeMachine {
-
+	
+	//Variáveis
 	private ComponentsFactory factory;
 	private int cents, dolar; 
 	private Display display;
@@ -27,7 +29,31 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		this.moedas = new ArrayList<Coin>();
 		this.display.info("Insert coins and select a drink!");
 	}
-
+	
+	//Meus métodos
+	
+	public void retornarMoedas(){
+		for(Coin coin : Coin.reverse()){
+			for(Coin aux : moedas){
+				if(aux == coin){
+					cashBox.release(aux);
+				}
+			}
+		}
+		novaSessao();
+	}
+	
+	public void limparMoedas(){
+		moedas.clear();
+	}
+	
+	public void novaSessao(){
+		limparMoedas();
+		factory.getDisplay().info("Insert coins and select a drink!");
+		
+	}
+	//Métodos do teste
+	
 	public void insertCoin(Coin coin) {
 		if (coin != null) {
 			moedas.add(coin);
@@ -44,17 +70,9 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		if ((cents == 0) && (dolar == 0)){
 			throw new CoffeeMachineException("");
 		}
-		
+		factory.getDisplay().warn("Cancelling drink. Please, get your coins.");
 		if(moedas.size() > 0){
-			factory.getDisplay().warn("Cancelling drink. Please, get your coins.");
-			for(Coin coin : Coin.reverse()){
-				for(Coin aux : moedas){
-					if(aux == coin){
-						cashBox.release(aux);
-					}
-				}
-			}
-			factory.getDisplay().info("Insert coins and select a drink!");
+			retornarMoedas();
 		}
 	}
 
@@ -62,7 +80,11 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		//verifyBlackPlan
 		factory.getCupDispenser().contains(1);
 		factory.getWaterDispenser().contains(1.1);
-		factory.getCoffeePowderDispenser().contains (1.2);
+		if(!factory.getCoffeePowderDispenser().contains (1.2)){
+			factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
+			retornarMoedas();
+			return;
+		}
 		
 		if(drink == Drink.BLACK_SUGAR){
 			factory.getSugarDispenser().contains(2.1);
@@ -82,9 +104,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		factory.getCupDispenser().release (1);
 		factory.getDrinkDispenser().release (1.5);
 		display.info("Please, take your drink.");		
-		display.info("Insert coins and select a drink!");
 		
-		moedas.clear();
+		novaSessao();
 	}
 	
 }
