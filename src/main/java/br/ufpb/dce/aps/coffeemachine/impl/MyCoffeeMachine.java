@@ -111,6 +111,11 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	}
 
 	public void select(Drink drink) {
+		if (calculaTroco() < 0){
+			display.warn(Messages.NO_ENOUGHT_MONEY);
+			retornarMoedas();
+			return;
+		}
 		//verifyBlackPlan
 		if(!factory.getCupDispenser().contains(1)){
 			display.warn(Messages.OUT_OF_CUP);
