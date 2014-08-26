@@ -59,17 +59,30 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	}
 
 	public void select(Drink drink) {
+		//verifyBlackPlan
 		factory.getCupDispenser().contains(1);
-		factory.getWaterDispenser().contains(0.5);
-		factory.getCoffeePowderDispenser().contains (0.8); 
+		factory.getWaterDispenser().contains(1.1);
+		factory.getCoffeePowderDispenser().contains (1.2);
+		
+		if(drink == Drink.BLACK_SUGAR){
+			factory.getSugarDispenser().contains(2.1);
+		}
+		
+		//verifyBlackSugarMix
 		factory.getDisplay().info("Mixing ingredients.");	
-		factory.getCoffeePowderDispenser().release (0.6); 
-		factory.getWaterDispenser().release (0.9);
+		factory.getCoffeePowderDispenser().release (1.3); 
+		factory.getWaterDispenser().release (1.4);
+		
+		if(drink == Drink.BLACK_SUGAR){
+			factory.getSugarDispenser().release(2.2);
+		}
+		
+		//verifyDrinkRelease
 		factory.getDisplay().info("Releasing drink.");
 		factory.getCupDispenser().release (1);
-		factory.getDrinkDispenser().release (0.3);
-		factory.getDisplay().info("Please, take your drink.");		
-		factory.getDisplay().info("Insert coins and select a drink!");
+		factory.getDrinkDispenser().release (1.5);
+		display.info("Please, take your drink.");		
+		display.info("Insert coins and select a drink!");
 	}
 	
 }
