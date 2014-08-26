@@ -94,6 +94,10 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			return;
 		}
 		
+		if (drink == Drink.WHITE) {
+			factory.getCreamerDispenser().contains(2.0);
+		}
+
 		if(drink == Drink.BLACK_SUGAR){
 			if(!factory.getSugarDispenser().contains(2.1)){
 				display.warn(Messages.OUT_OF_SUGAR);
@@ -107,6 +111,10 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		factory.getCoffeePowderDispenser().release (1.3); 
 		factory.getWaterDispenser().release (1.4);
 		
+		if (drink == Drink.WHITE) {
+			factory.getCreamerDispenser().release(2.0);
+		
+		}
 		if(drink == Drink.BLACK_SUGAR){
 			factory.getSugarDispenser().release(2.2);
 		}
