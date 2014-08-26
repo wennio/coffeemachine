@@ -22,6 +22,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	private final int COFFEBLACK = 35;
 	private int troco;
 	private boolean retornarTroco = false;
+	private boolean faltaTroco = false;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		cents = 0;
@@ -56,13 +57,13 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		
 	}
 	
-	public void planejamento(int troco){
+	public boolean planejamento(int troco){
 		for (Coin coin : Coin.reverse()) {
-			if (coin.getValue() <= troco) {
-				cashBox.count(coin);
+			if (coin.getValue() <= troco && cashBox.count(coin) > 0) {
 				troco -= coin.getValue();
 			}
 		}
+		return troco == 0;
 	}
 	
 	public void releaseCoins(int troco){
@@ -150,7 +151,11 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			}
 		}
 		
-		planejamento(calculaTroco());
+		if(!planejamento(calculaTroco())){
+			display.warn(Messages.NO_ENOUGHT_CHANGE);
+			retornarMoedas();
+			return;
+		}
 		
 		//verifyBlackSugarMix
 		factory.getDisplay().info("Mixing ingredients.");	
