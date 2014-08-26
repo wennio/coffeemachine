@@ -87,7 +87,11 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		}
 		
 		if(drink == Drink.BLACK_SUGAR){
-			factory.getSugarDispenser().contains(2.1);
+			if(!factory.getSugarDispenser().contains(2.1)){
+				display.warn(Messages.OUT_OF_SUGAR);
+				retornarMoedas();
+				return;
+			}
 		}
 		
 		//verifyBlackSugarMix
