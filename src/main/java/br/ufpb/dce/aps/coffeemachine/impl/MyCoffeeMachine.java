@@ -19,6 +19,9 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	private Display display;
 	private CashBox cashBox;
 	private ArrayList<Coin> moedas;
+	private final int COFFEBLACK = 35;
+	private int troco;
+	private boolean retornarTroco = false;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		cents = 0;
@@ -52,6 +55,33 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		factory.getDisplay().info("Insert coins and select a drink!");
 		
 	}
+	
+	public void planejamento(int troco){
+		for (Coin coin : Coin.reverse()) {
+			if (coin.getValue() <= troco) {
+				cashBox.count(coin);
+				troco -= coin.getValue();
+			}
+		}
+	}
+	
+	public void releaseCoins(int troco){
+		for (Coin coin : Coin.reverse()) {
+			if (coin.getValue() <= troco) {
+				cashBox.release(coin);
+				troco -= coin.getValue();
+			}
+		}
+	}
+	
+	public int calculaTroco(){
+		int somatorioMoedas = 0;
+		for (Coin aux : moedas) {
+			somatorioMoedas += aux.getValue();
+		}
+		return  somatorioMoedas - COFFEBLACK;
+	}
+	
 	//Métodos do teste
 	
 	public void insertCoin(Coin coin) {
@@ -60,6 +90,10 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			cents += coin.getValue() % 100;
 			dolar += coin.getValue() / 100;
 			factory.getDisplay().info("Total: US$ " + dolar + "." + cents + "");
+			this.troco = (dolar + cents) - COFFEBLACK;
+			if(troco > 0){
+				retornarTroco = true;
+			}
 		} else {
 			throw new CoffeeMachineException("");
 		}
@@ -97,6 +131,11 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		if (drink == Drink.WHITE) {
 			factory.getCreamerDispenser().contains(2.0);
 		}
+		
+		if (drink == Drink.WHITE_SUGAR) {
+			factory.getCreamerDispenser().contains(2.4);
+			factory.getSugarDispenser().contains(2.5);
+		}
 
 		if(drink == Drink.BLACK_SUGAR){
 			if(!factory.getSugarDispenser().contains(2.1)){
@@ -105,6 +144,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 				return;
 			}
 		}
+		
+		planejamento(calculaTroco());
 		
 		//verifyBlackSugarMix
 		factory.getDisplay().info("Mixing ingredients.");	
@@ -115,6 +156,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			factory.getCreamerDispenser().release(2.0);
 		
 		}
+		
+		if (drink == Drink.WHITE_SUGAR) {
+			factory.getCreamerDispenser().release(2.4);
+			factory.getSugarDispenser().release(2.5);
+		}
+		
 		if(drink == Drink.BLACK_SUGAR){
 			factory.getSugarDispenser().release(2.2);
 		}
@@ -124,6 +171,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		factory.getCupDispenser().release (1);
 		factory.getDrinkDispenser().release (1.5);
 		display.info("Please, take your drink.");		
+		
+		releaseCoins(calculaTroco());
 		
 		novaSessao();
 	}
