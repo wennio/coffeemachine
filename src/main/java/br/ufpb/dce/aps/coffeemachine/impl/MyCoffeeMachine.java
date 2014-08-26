@@ -1,190 +1,160 @@
 package br.ufpb.dce.aps.coffeemachine.impl;
 
-import java.util.ArrayList;
-
-import br.ufpb.dce.aps.coffeemachine.CashBox;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
-import br.ufpb.dce.aps.coffeemachine.Display;
 import br.ufpb.dce.aps.coffeemachine.Drink;
 import br.ufpb.dce.aps.coffeemachine.Messages;
 
 public class MyCoffeeMachine implements CoffeeMachine {
 	
-	//Variáveis
 	private ComponentsFactory factory;
-	private int cents, dolar; 
-	private Display display;
-	private CashBox cashBox;
-	private ArrayList<Coin> moedas;
-	private final int COFFEBLACK = 35;
-	private int troco;
-	private boolean retornarTroco = false;
-	private boolean faltaTroco = false;
-	
+
+	private BlackCoffee coffee;
+	private MyDisplay myDisplay;
+	private MyCashBox myCashBox;
+
 	public MyCoffeeMachine(ComponentsFactory factory) {
-		cents = 0;
-		dolar = 0;
+
 		this.factory = factory;
-		this.display= factory.getDisplay();
-		this.cashBox = factory.getCashBox();
-		this.moedas = new ArrayList<Coin>();
-		this.display.info("Insert coins and select a drink!");
+		myDisplay = new MyDisplay(factory);
+		myDisplay.info(Messages.INSERT_COINS);
+		myCashBox = new MyCashBox(factory);
+
 	}
-	
-	//Meus métodos
-	
-	public void retornarMoedas(){
-		for(Coin coin : Coin.reverse()){
-			for(Coin aux : moedas){
-				if(aux == coin){
-					cashBox.release(aux);
-				}
-			}
-		}
-		novaSessao();
-	}
-	
-	public void limparMoedas(){
-		moedas.clear();
-	}
-	
-	public void novaSessao(){
-		limparMoedas();
-		factory.getDisplay().info("Insert coins and select a drink!");
-		
-	}
-	
-	public boolean planejamento(int troco){
-		for (Coin coin : Coin.reverse()) {
-			if (coin.getValue() <= troco && cashBox.count(coin) > 0) {
-				troco -= coin.getValue();
-			}
-		}
-		return troco == 0;
-	}
-	
-	public void releaseCoins(int troco){
-		for (Coin coin : Coin.reverse()) {
-			if (coin.getValue() <= troco) {
-				cashBox.release(coin);
-				troco -= coin.getValue();
-			}
-		}
-	}
-	
-	public int calculaTroco(){
-		int somatorioMoedas = 0;
-		for (Coin aux : moedas) {
-			somatorioMoedas += aux.getValue();
-		}
-		return  somatorioMoedas - COFFEBLACK;
-	}
-	
-	//Métodos do teste
-	
+
 	public void insertCoin(Coin coin) {
-		if (coin != null) {
-			moedas.add(coin);
-			cents += coin.getValue() % 100;
-			dolar += coin.getValue() / 100;
-			factory.getDisplay().info("Total: US$ " + dolar + "." + cents + "");
-			this.troco = (dolar + cents) - COFFEBLACK;
-			if(troco > 0){
-				retornarTroco = true;
-			}
-		} else {
-			throw new CoffeeMachineException("");
-		}
+
+		myCashBox.insertCoin(coin);
 
 	}
 
 	public void cancel() {
-		if ((cents == 0) && (dolar == 0)){
-			throw new CoffeeMachineException("");
-		}
-		factory.getDisplay().warn("Cancelling drink. Please, get your coins.");
-		if(moedas.size() > 0){
-			retornarMoedas();
+
+		if (myCashBox.cancel()) {
+			newSession();
 		}
 	}
 
-	public void select(Drink drink) {
-		if (calculaTroco() < 0){
-			display.warn(Messages.NO_ENOUGHT_MONEY);
-			retornarMoedas();
-			return;
+	int[] planCoins() {
+
+		int troco = myCashBox.calculaTroco();
+		int[] changePlan = new int[6];
+		int i = 0;
+		for (Coin r : Coin.reverse()) {
+			if (r.getValue() <= troco && myCashBox.count(r) > 0) {
+				while (r.getValue() <= troco) {
+					troco -= r.getValue();
+					changePlan[i]++;
+				}
+			}
+			i++;
 		}
-		//verifyBlackPlan
-		if(!factory.getCupDispenser().contains(1)){
-			display.warn(Messages.OUT_OF_CUP);
-			retornarMoedas();
-			return;
-		}
-		if(!factory.getWaterDispenser().contains(1.1)){
-			display.warn(Messages.OUT_OF_WATER);
-			retornarMoedas();
-			return;
-		}
-		if(!factory.getCoffeePowderDispenser().contains (1.2)){
-			display.warn(Messages.OUT_OF_COFFEE_POWDER);
-			retornarMoedas();
-			return;
-		}
-		
-		if (drink == Drink.WHITE) {
-			factory.getCreamerDispenser().contains(2.0);
-		}
-		
-		if (drink == Drink.WHITE_SUGAR) {
-			factory.getCreamerDispenser().contains(2.4);
-			factory.getSugarDispenser().contains(2.5);
+		if (troco != 0) {
+			throw new CoffeeMachineException("");
 		}
 
-		if(drink == Drink.BLACK_SUGAR){
-			if(!factory.getSugarDispenser().contains(2.1)){
-				display.warn(Messages.OUT_OF_SUGAR);
-				retornarMoedas();
-				return;
+		return changePlan;
+	}
+
+	private void releaseCoins(int[] changePlan) {
+
+		for (int i = 0; i < changePlan.length; i++) {
+			int count = changePlan[i];
+			Coin coin = Coin.reverse()[i];
+
+			for (int j = 1; j <= count; j++) {
+				myCashBox.release(coin);
 			}
 		}
-		
-		if(!planejamento(calculaTroco())){
-			display.warn(Messages.NO_ENOUGHT_CHANGE);
-			retornarMoedas();
+	}
+
+	private void newSession() {
+		myCashBox.clearCoins();
+		myDisplay.info(Messages.INSERT_COINS);
+	}
+
+	public void select(Drink drink) {
+
+		boolean isvalido = true;
+
+		if (myCashBox.calculaTroco() < 0) {
+			abortSession(Messages.NO_ENOUGHT_MONEY);
 			return;
 		}
-		
-		//verifyBlackSugarMix
-		factory.getDisplay().info("Mixing ingredients.");	
-		factory.getCoffeePowderDispenser().release (1.3); 
-		factory.getWaterDispenser().release (1.4);
-		
-		if (drink == Drink.WHITE) {
-			factory.getCreamerDispenser().release(2.0);
-		
+
+		// Chamada de métodos Plan
+
+		switch (drink) {
+
+		case BLACK:
+			coffee = new BlackCoffee(factory);
+			isvalido = coffee.blackPlan();
+			break;
+		case WHITE:
+			coffee = new WhiteCoffee(factory);
+			isvalido = ((WhiteCoffee) coffee).whitePlan();
+			break;
+		case WHITE_SUGAR:
+			coffee = new WhiteSugarCoffee(factory);
+			isvalido = ((WhiteSugarCoffee) coffee).whiteSugarPlan();
+			break;
+		case BLACK_SUGAR:
+			coffee = new BlackSugarCoffee(factory);
+			isvalido = ((BlackSugarCoffee) coffee).blackSugarPlan();
+			break;
+
 		}
-		
-		if (drink == Drink.WHITE_SUGAR) {
-			factory.getCreamerDispenser().release(2.4);
-			factory.getSugarDispenser().release(2.5);
+
+		if (!isvalido) {
+			abortSession(WarnMessage.getWarnMessage());
+			return;
 		}
-		
-		if(drink == Drink.BLACK_SUGAR){
-			factory.getSugarDispenser().release(2.2);
+
+		int[] changePlan = null;
+
+		try {
+			changePlan = planCoins();
+		} catch (Exception e) {
+			abortSession(Messages.NO_ENOUGHT_CHANGE);
+			return;
 		}
-		
-		//verifyDrinkRelease
-		factory.getDisplay().info("Releasing drink.");
-		factory.getCupDispenser().release (1);
-		factory.getDrinkDispenser().release (1.5);
-		display.info("Please, take your drink.");		
-		
-		releaseCoins(calculaTroco());
-		
-		novaSessao();
+
+		myDisplay.info(Messages.MIXING);
+
+		// Chamada de métodos Mix
+
+		switch (drink) {
+		case BLACK:
+			coffee.blackMix();
+			break;
+		case WHITE:
+			((WhiteCoffee) coffee).whiteMix();
+			break;
+		case WHITE_SUGAR:
+			((WhiteSugarCoffee) coffee).whiteSugarMix();
+			break;
+		case BLACK_SUGAR:
+			((BlackSugarCoffee) coffee).blackSugarMix();
+			break;
+		}
+
+		// Chamadas de DrinkRelease
+		myDisplay.info(Messages.RELEASING);
+		coffee.drinkRelease();
+		myDisplay.info(Messages.TAKE_DRINK);
+
+		releaseCoins(changePlan);
+
+		newSession();
+
+	}
+
+	private void abortSession(String msg) {
+		myDisplay.warn(msg);
+		myCashBox.returnCoins();
+		newSession();
 	}
 	
 }
