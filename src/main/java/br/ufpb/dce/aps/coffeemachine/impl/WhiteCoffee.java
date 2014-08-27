@@ -9,20 +9,41 @@ public class WhiteCoffee extends BlackCoffee{
 		super(factory);
 		
 	}
+	
+	public boolean blackPlan(){  
+		if (!getFactory().getCupDispenser().contains(1)) { 
+			WarnMessage.setWarnMessage(Messages.OUT_OF_CUP);
+			return false;
+		}
+		if (!getFactory().getWaterDispenser().contains(80)) { 
+			WarnMessage.setWarnMessage(Messages.OUT_OF_WATER);
+			return false;
+		}
+		if (!getFactory().getCoffeePowderDispenser().contains(15)) {
+			WarnMessage.setWarnMessage(Messages.OUT_OF_COFFEE_POWDER); 
+			return false;
+		}
+		return true;
+		}
 
 	public boolean whitePlan(){
 		if (!blackPlan()) { 
 			return false;
 		}
-		if(!getFactory().getCreamerDispenser().contains(2.0)){
+		if(!getFactory().getCreamerDispenser().contains(20)){
 			WarnMessage.setWarnMessage(Messages.OUT_OF_CREAMER);
 			return false;
 		}
 		return true;
 	}
 	
+	public void blackMix(){
+		getFactory().getCoffeePowderDispenser().release(15); 
+		getFactory().getWaterDispenser().release(80);
+	}
+	
 	public void whiteMix(){
 		blackMix();
-		getFactory().getCreamerDispenser().release(2.0);
+		getFactory().getCreamerDispenser().release(20);
 	} 
 }
