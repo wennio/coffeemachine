@@ -13,7 +13,7 @@ public class BlackSugarCoffee extends BlackCoffee{
 		if (!blackPlan()) {
 			return false;
 		}
-		if (!getFactory().getSugarDispenser().contains(5.0)) {
+		if (!getFactory().getSugarDispenser().contains(5)) {
 			WarnMessage.setWarnMessage(Messages.OUT_OF_SUGAR); 
 			return false;
 		}
@@ -23,6 +23,6 @@ public class BlackSugarCoffee extends BlackCoffee{
 	
 	public void blackSugarMix(){
 		blackMix();
-		getFactory().getSugarDispenser().release(5.0);
+		getFactory().getSugarDispenser().release(5);
 	}
 }
