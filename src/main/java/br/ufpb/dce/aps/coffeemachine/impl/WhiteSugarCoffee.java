@@ -11,12 +11,12 @@ public class WhiteSugarCoffee extends WhiteCoffee{
 		if(!whitePlan()){
 			return false;
 		}
-		getFactory().getSugarDispenser().contains(5.0);
+		getFactory().getSugarDispenser().contains(5);
 		return true;
 	}
 
 	public void whiteSugarMix(){
 		whiteMix();
-		getFactory().getSugarDispenser().release(5.0);
+		getFactory().getSugarDispenser().release(5);
 	}
 }
