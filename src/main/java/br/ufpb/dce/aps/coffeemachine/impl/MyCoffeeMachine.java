@@ -15,17 +15,6 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	private MyDisplay myDisplay;
 	private MyCashBox myCashBox;
 
-	public MyCoffeeMachine(ComponentsFactory factory) {
-
-		this.factory = factory;
-		myDisplay = new MyDisplay(factory);
-		myDisplay.info(Messages.INSERT_COINS);
-		myCashBox = new MyCashBox(factory);
-		coffee = new BlackCoffee(factory);
-		myCashBox.setCoffeePrice(35);
-
-	}
-
 	public void insertCoin(Coin coin) {
 
 		myCashBox.insertCoin(coin);
@@ -167,6 +156,19 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		myDisplay.warn(msg);
 		myCashBox.returnCoins();
 		newSession();
+	}
+	
+	public void setFactory(ComponentsFactory factory) {
+		this.factory = factory;
+		myDisplay = new MyDisplay(factory);
+		myDisplay.info(Messages.INSERT_COINS);
+		myCashBox = new MyCashBox(factory);
+		coffee = new BlackCoffee(factory);
+		myCashBox.setCoffeePrice(35);
+	}
+		
+	public void readBadge(int badgeCode) {
+		myDisplay.info(Messages.BADGE_READ);
 	}
 	
 }
