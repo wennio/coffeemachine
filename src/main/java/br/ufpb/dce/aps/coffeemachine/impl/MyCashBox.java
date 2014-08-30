@@ -15,6 +15,7 @@ public class MyCashBox {
 	private ArrayList<Coin> moedas;
 	private int centavos, dolares;
 	private int COFFEEPRICE;
+	private boolean isUseCard = false;
 	
 	public MyCashBox(ComponentsFactory factory){
 		cashBox =  factory.getCashBox();
@@ -85,5 +86,14 @@ public class MyCashBox {
 
 	public int count(Coin coin) {
 		return cashBox.count(coin);
+	}
+	
+	public boolean isUseCard() {
+		return isUseCard;
+	}
+
+
+	public void setUseCard(boolean isUseCard) {
+		this.isUseCard = isUseCard;
 	}
 }

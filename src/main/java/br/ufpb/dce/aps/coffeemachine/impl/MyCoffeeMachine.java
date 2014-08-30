@@ -16,9 +16,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	private MyCashBox myCashBox;
 
 	public void insertCoin(Coin coin) {
-
-		myCashBox.insertCoin(coin);
-
+		if(!myCashBox.isUseCard()){
+			myCashBox.insertCoin(coin);
+		}else{
+			myDisplay.warn(Messages.CAN_NOT_INSERT_COINS);
+			myCashBox.release(coin);
+		}
 	}
 
 	public void cancel() {
